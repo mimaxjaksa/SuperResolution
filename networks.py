@@ -30,19 +30,24 @@ class ResidualDenseBlock(nn.Module):
         return (x + x_)
 
 class SuperResolutionNetwork(nn.Module):
-    def __init__(self, G0 = 64, G = 64, c = 6, d = 20, ratio = 2):
+    def __init__(self, **kwargs):
         super(SuperResolutionNetwork, self).__init__()
-        if G0 % ratio**2:
+        self.G0 = kwargs["G0"]
+        self.G = kwargs["G"]
+        self.ratio = kwargs["ratio"]
+        self.d = kwargs["d"]
+        self.c = kwargs["c"]
+        if self.G0 % self.ratio**2:
             AssertionError(f"Feature map count (G0) has to be a divisible by upscale ratio")
-        self.pixel_shuffle = nn.PixelShuffle(ratio)
-        self.conv1 = ShallowFeatureExtraction(in_=3,  out_=G0)
-        self.conv2 = ShallowFeatureExtraction(in_=G0, out_=G0)
-        block_list = d*[ResidualDenseBlock(G0=G0, G=G, c=c)]
+        self.pixel_shuffle = nn.PixelShuffle(self.ratio)
+        self.conv1 = ShallowFeatureExtraction(in_=3,  out_=self.G0)
+        self.conv2 = ShallowFeatureExtraction(in_=self.G0, out_=self.G0)
+        block_list = self.d*[ResidualDenseBlock(G0=self.G0, G=self.G, c=self.c)]
         self.blocks = nn.ModuleList(block_list)
-        self.conv3 = nn.Conv2d(in_channels = d*G0, out_channels=G0, kernel_size=(1, 1))
-        self.conv4 = nn.Conv2d(in_channels=G0, out_channels=G0, kernel_size=(3, 3), padding=1)
-        self.upscale_conv = nn.Conv2d(in_channels=G0, out_channels=G0,kernel_size=(3, 3), padding=1)
-        self.conv5 = nn.Conv2d(in_channels=int(G0/(ratio**2)), out_channels=3, kernel_size=(3, 3), padding=1)
+        self.conv3 = nn.Conv2d(in_channels = self.d*self.G0, out_channels=self.G0, kernel_size=(1, 1))
+        self.conv4 = nn.Conv2d(in_channels=self.G0, out_channels=self.G0, kernel_size=(3, 3), padding=1)
+        self.upscale_conv = nn.Conv2d(in_channels=self.G0, out_channels=self.G0,kernel_size=(3, 3), padding=1)
+        self.conv5 = nn.Conv2d(in_channels=int(self.G0/(self.ratio**2)), out_channels=3, kernel_size=(3, 3), padding=1)
 
     def forward(self, x):
         F_1 = self.conv1(x)
