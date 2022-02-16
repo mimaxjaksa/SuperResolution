@@ -87,3 +87,16 @@ def save_all(net, optimizer, running_loss, path):
         'optimizer_state_dict': optimizer.state_dict(),
         'loss': running_loss
     }, path)
+
+class PSNR:
+    def __init__(self):
+        self.name = "PSNR"
+        self.item = 0
+
+    def __call__(self, img1, img2):
+        mse = torch.mean((img2 - img1) ** 2)
+        self.item = -20 * torch.log10(255.0 / torch.sqrt(mse))
+        return self.item
+
+    def item(self):
+        return self.item

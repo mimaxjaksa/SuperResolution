@@ -1,8 +1,6 @@
-import os
 import time
 
 import cv2
-import numpy as np
 import torch.optim as optim
 
 from networks import SuperResolutionNetwork
@@ -24,7 +22,8 @@ if __name__ == "__main__":
     }
 
     dataset = CustomDataSet(os.getcwd() + "//DIV2K_train_HR")
-    loss_fn = torch.nn.MSELoss()
+    # loss_fn = torch.nn.MSELoss()
+    loss_fn = PSNR()
     device = 'cpu' if args.mode == 'test' or not torch.cuda.is_available() else 'cuda'
     net = SuperResolutionNetwork(**hyperparameters).to(device)
     optimizer = optim.Adam(net.parameters(), lr=hyperparameters["lr"])
@@ -48,14 +47,10 @@ if __name__ == "__main__":
                     loss.backward()
                     optimizer.step()
                     running_loss += loss.item()/hyperparameters["backpropagations_per_epoch"]
-            write_loss_to_file(running_loss)
             if epoch_i % 10 == 0:
                 print(f"Finished {epoch_i}th epoch, current loss: {running_loss} at {time.strftime(time_format)}")
                 save_all(net, optimizer, running_loss, os.path.join(os.getcwd(), models_folder_name, f"{epoch_i}.pt"))
-                # torch.save(net, f"{os.getcwd()}//{models_folder_name}//{epoch_i}.pt")
     else:
-        # net = torch.load(args.model_name).to(device)
-        # net.eval()
         checkpoint = torch.load(args.model_name)
         net.load_state_dict(checkpoint['model_state_dict'])
         optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
@@ -73,4 +68,3 @@ if __name__ == "__main__":
         cv2.imwrite("0output.png", output)
         cv2.imwrite("1target.png", test_im)
         cv2.imwrite("2diff.png", diff)
-        pass
