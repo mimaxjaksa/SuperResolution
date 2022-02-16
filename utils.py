@@ -9,9 +9,8 @@ import torch
 from torch.utils.data import Dataset
 
 time_format = '%d_%H_%M_%S'
-device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
-np_to_tensor = lambda im: torch.unsqueeze(torch.permute(torch.Tensor(im), (2, 1, 0)), 0).to(device)
+np_to_tensor = lambda im, device: torch.unsqueeze(torch.permute(torch.Tensor(im), (2, 1, 0)), 0).to(device)
 
 tensor_to_np = lambda im: torch.permute(torch.squeeze(im), (2, 1, 0)).detach().numpy().astype(np.uint8)
 
@@ -81,3 +80,10 @@ class CustomDataSet(Dataset):
 def write_loss_to_file(loss):
     with open("loss.txt", "a") as f:
         f.write(str(loss) + '\n')
+
+def save_all(net, optimizer, running_loss, path):
+    torch.save({
+        'model_state_dict': net.state_dict(),
+        'optimizer_state_dict': optimizer.state_dict(),
+        'loss': running_loss
+    }, path)
