@@ -1,12 +1,14 @@
 import argparse
 import os
 import random
-
+import json
 import cv2
 import natsort
 import numpy as np
 import torch
 from torch.utils.data import Dataset
+
+import pytorch_ssim
 
 time_format = '%d_%H_%M_%S'
 
@@ -19,10 +21,32 @@ def parse_args():
 
 	parser.add_argument('--mode', dest = 'mode', type = str, default = 'train')
 	parser.add_argument('--model', dest='model_name', type=str, default=f"{os.getcwd()}//models//1.pt")
+	parser.add_argument('--folder', dest='folder_name', type=str, default="models")
 
 	args = parser.parse_args()
 
 	return args
+
+def save_hyperparameters(folder_name, hyperparams):
+    os.chdir(folder_name)
+    with open("hyperparameters.txt", "w") as f:
+        f.write(json.dumps(hyperparams, indent=2))
+    os.chdir("..")
+
+def upscale_image(input_image = None, ratio = 2):
+    if input_image is not None:
+        AssertionError("No input image")
+    w, h, c = input_image.shape
+    new_im = np.zeros([int(w*ratio), int(h*ratio), 3])
+    im = input_image.astype(int)
+    for i in range(input_image.shape[0]):
+        for j in range(input_image.shape[1]):
+            # new_im[i, j, :] = (im[2*i, 2*j, :] + im[2*i + 1, 2*j, :] + im[2*i, 2*j + 1, :] + im[2*i + 1, 2*j + 1, :])/4
+            new_im[2*i, 2*j, :] = input_image[i, j, :]
+            new_im[2 * i + 1, 2 * j, :] = input_image[i, j, :]
+            new_im[2 * i, 2 * j + 1, :] = input_image[i, j, :]
+            new_im[2 * i + 1, 2 * j + 1, :] = input_image[i, j, :]
+    return new_im.astype(np.uint8)
 
 def downscale_image(input_image = None, ratio = 2, method = 'simple'):
     if input_image is not None:
@@ -96,6 +120,33 @@ class PSNR:
     def __call__(self, img1, img2):
         mse = torch.mean((img2 - img1) ** 2)
         self.item = -20 * torch.log10(255.0 / torch.sqrt(mse))
+        return self.item
+
+    def item(self):
+        return self.item
+
+class Combined_loss:
+    def __init__(self):
+        self.name = "Combined"
+        self.item = 0
+        self.mse = torch.nn.MSELoss()
+
+    def __call__(self, img1, img2):
+        mse = torch.mean((img2 - img1) ** 2)
+        self.item = -20 * torch.log10(255.0 / torch.sqrt(mse)) + self.mse(img1, img2)
+        return self.item
+
+    def item(self):
+        return self.item
+
+class SSIM:
+    def __init__(self, win_size = 11):
+        self.name = "SSIM"
+        self.item = 0
+        self.loss = pytorch_ssim.SSIM(window_size=win_size)
+
+    def __call__(self, img1, img2):
+        self.item = 1.0 - self.loss(img1, img2)
         return self.item
 
     def item(self):
