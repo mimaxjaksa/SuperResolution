@@ -75,14 +75,8 @@ if __name__ == "__main__":
         test_im = dataset.get_random_test_image(crop_len=500)
         input_image = downscale_image(test_im, ratio=2)
         upscaled_image = upscale_image(input_image, ratio = 2)
-        cv2.imwrite("input_image.png", input_image)
         input_image = np_to_tensor(input_image, device)
         output = net(input_image)
-        print(f"Losses: \n"
-              f"MSE: {mse_loss(np_to_tensor(test_im, device), output)}\n"
-              f"PSNR: {psnr_loss(np_to_tensor(test_im, device), output)}\n"
-              f"Combined: {combined_loss(np_to_tensor(test_im, device), output)}\n"
-              f"SSIM: {ssim_loss(np_to_tensor(test_im, device), output)}\n")
         output = tensor_to_np(output)
         cv2.imwrite("1output.png", output)
         cv2.imwrite("2target.png", test_im)
@@ -94,4 +88,8 @@ if __name__ == "__main__":
             checkpoint = torch.load(os.path.join(os.getcwd(), folder_name, name))
             losses.append(checkpoint['loss'])
         plt.plot(losses)
+        plt.grid()
+        plt.ylabel("MSE+PSNR")
+        plt.xlabel("epochs")
+        plt.title("Loss function")
         plt.waitforbuttonpress()
