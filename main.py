@@ -34,7 +34,7 @@ if __name__ == "__main__":
     net = SuperResolutionNetwork(**hyperparameters).to(device)
     optimizer = optim.Adam(net.parameters(), lr=hyperparameters["lr"])
     if args.mode == 'train':
-        loss_fn = SSIM() # Loss to minimize
+        loss_fn = Combined_loss() # Loss to minimize
         hyperparameters['loss'] = loss_fn.name
         start_time = time.strftime(time_format)
         print(f"Starting training on {device} at {start_time}")
@@ -66,7 +66,6 @@ if __name__ == "__main__":
         mse_loss = torch.nn.MSELoss()
         psnr_loss = PSNR()
         combined_loss = Combined_loss()
-        ssim_loss = pytorch_ssim.SSIM(window_size=11)
         checkpoint = torch.load(args.model_name)
         net.load_state_dict(checkpoint['model_state_dict'])
         optimizer.load_state_dict(checkpoint['optimizer_state_dict'])

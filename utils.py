@@ -8,8 +8,6 @@ import numpy as np
 import torch
 from torch.utils.data import Dataset
 
-import pytorch_ssim
-
 time_format = '%d_%H_%M_%S'
 
 np_to_tensor = lambda im, device: torch.unsqueeze(torch.permute(torch.Tensor(im), (2, 1, 0)), 0).to(device)
@@ -134,19 +132,6 @@ class Combined_loss:
     def __call__(self, img1, img2):
         mse = torch.mean((img2 - img1) ** 2)
         self.item = -20 * torch.log10(255.0 / torch.sqrt(mse)) + self.mse(img1, img2)
-        return self.item
-
-    def item(self):
-        return self.item
-
-class SSIM:
-    def __init__(self, win_size = 11):
-        self.name = "SSIM"
-        self.item = 0
-        self.loss = pytorch_ssim.SSIM(window_size=win_size)
-
-    def __call__(self, img1, img2):
-        self.item = 1.0 - self.loss(img1, img2)
         return self.item
 
     def item(self):
