@@ -10,10 +10,10 @@ Resulting images(input-output-target):
 ![target](target.png)
  -->
  
-<img src="https://user-images.githubusercontent.com/43972534/155841071-2dc200ff-a05b-40df-9aa5-8df1796c93ff.png" width="500" height="500">
-
-<img src="https://user-images.githubusercontent.com/43972534/155841120-5260e465-f73a-4a74-8520-4f2f8649df9f.png" width="500" height="500"><img src="https://user-images.githubusercontent.com/43972534/155841146-e4d77123-4fc0-4496-b889-5c75e8fa7226.png
-" width="500" height="500">
+<img src="https://user-images.githubusercontent.com/43972534/155841071-2dc200ff-a05b-40df-9aa5-8df1796c93ff.png" width="400" height="400">
+<img src="https://user-images.githubusercontent.com/43972534/155841120-5260e465-f73a-4a74-8520-4f2f8649df9f.png" width="400" height="400">
+<img src="https://user-images.githubusercontent.com/43972534/155841146-e4d77123-4fc0-4496-b889-5c75e8fa7226.png
+" width="400" height="400">
 
 
 <!-- ![input](https://github.com/mimaxjaksa/SuperResolution/blob/main/input.png =100x100)
