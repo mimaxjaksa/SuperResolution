@@ -9,10 +9,11 @@ Resulting images(input-output-target):
 ![output](output.png)
 ![target](target.png)
  -->
- 
-<img src="https://user-images.githubusercontent.com/43972534/155841071-2dc200ff-a05b-40df-9aa5-8df1796c93ff.png" width="400" height="400">
-<img src="https://user-images.githubusercontent.com/43972534/155841120-5260e465-f73a-4a74-8520-4f2f8649df9f.png" width="400" height="400">
-<img src="https://user-images.githubusercontent.com/43972534/155841146-e4d77123-4fc0-4496-b889-5c75e8fa7226.png" width="400" height="400">
+<p flaot="left">
+<img src="https://user-images.githubusercontent.com/43972534/155841399-1a431999-cc13-422b-ae17-014de4836110.png" width="400" height="400">
+<img src="https://user-images.githubusercontent.com/43972534/155841412-8c28a70e-5d38-4fcd-a936-b0bb861801ef.png" width="400" height="400">
+<img src="https://user-images.githubusercontent.com/43972534/155841420-5cf61dfb-f359-4b80-94d4-56e8885d7d84.png" width="400" height="400">
+</p>
 
 
 <!-- ![input](https://github.com/mimaxjaksa/SuperResolution/blob/main/input.png =100x100)
