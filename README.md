@@ -5,11 +5,17 @@ PyTorch implementation of the Super-Resolution approach used in the researh pape
 
 Resulting images(input-output-target):
 
-![input](input.png)
+<!-- ![input](input.png)
 ![output](output.png)
 ![target](target.png)
+ -->
+ 
+<img src="https://user-images.githubusercontent.com/43972534/155841071-2dc200ff-a05b-40df-9aa5-8df1796c93ff.png" width="100" height="100">
+
+<img src="https://user-images.githubusercontent.com/43972534/155841120-5260e465-f73a-4a74-8520-4f2f8649df9f.png" width="100" height="100">
 
 
-![input](https://github.com/mimaxjaksa/SuperResolution/blob/main/input.png =100x100)
+<!-- ![input](https://github.com/mimaxjaksa/SuperResolution/blob/main/input.png =100x100)
 ![output](https://github.com/mimaxjaksa/SuperResolution/blob/main/output.png =150x150)
 ![target](https://github.com/mimaxjaksa/SuperResolution/blob/main/target.png)
+ -->
