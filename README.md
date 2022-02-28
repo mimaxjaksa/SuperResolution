@@ -3,7 +3,12 @@ Course project for 13M054NM
 
 PyTorch implementation of the Super-Resolution approach used in the researh paper [Residual Dense Network for Image Super-Resolution](https://arxiv.org/pdf/1802.08797.pdf)
 
-Resulting images(input-output-target):
+How to use the trained model:
+```
+python ...main.py --mode test --model ...bestmodel.pt --test_image ..input.png
+```
+
+Resulting images(input - output - target):
 
 <p flaot="left">
 <img src="https://user-images.githubusercontent.com/43972534/155841399-1a431999-cc13-422b-ae17-014de4836110.png" width="270" height="270">

@@ -18,8 +18,9 @@ def parse_args():
 	parser = argparse.ArgumentParser()
 
 	parser.add_argument('--mode', dest = 'mode', type = str, default = 'train')
-	parser.add_argument('--model', dest='model_name', type=str, default=f"{os.getcwd()}//models//1.pt")
-	parser.add_argument('--folder', dest='folder_name', type=str, default="models")
+	parser.add_argument('--model', dest='model_name', type=str, default="")
+	parser.add_argument('--folder', dest='folder_name', type=str, default="")
+	parser.add_argument('--test_image', dest='test_image', type=str, default="")
 
 	args = parser.parse_args()
 

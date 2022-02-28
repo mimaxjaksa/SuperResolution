@@ -1,18 +1,11 @@
-import os
 import time
 
 import cv2
+import torch
 import torch.optim as optim
-import matplotlib
-matplotlib.use("TkAgg")
-from matplotlib import pyplot as plt
 
 from networks import SuperResolutionNetwork
 from utils import *
-
-
-import torch
-
 
 if __name__ == "__main__":
     args = parse_args()
@@ -41,7 +34,6 @@ if __name__ == "__main__":
         models_folder_name = f"models_{start_time}"
         os.mkdir(models_folder_name)
         save_hyperparameters(models_folder_name, hyperparameters)
-
         losses = []
         for epoch_i in range(hyperparameters["epoch_count"]):
             if epoch_i % 40:
@@ -63,32 +55,21 @@ if __name__ == "__main__":
                 print(f"Finished {epoch_i}th epoch, current loss: {running_loss} at {time.strftime(time_format)}")
                 save_all(net, optimizer, running_loss, os.path.join(os.getcwd(), models_folder_name, f"{epoch_i}.pt"))
     elif args.mode == "test":
-        mse_loss = torch.nn.MSELoss()
-        psnr_loss = PSNR()
-        combined_loss = Combined_loss()
+        assert args.model_name != "", "Model name to test not given!"
         checkpoint = torch.load(args.model_name)
         net.load_state_dict(checkpoint['model_state_dict'])
         optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
-        train_loss = checkpoint['loss']
         net.eval()
-        test_im = dataset.get_random_test_image(crop_len=500)
+        if args.test_image != "":
+            test_im = cv2.imread(args.test_image)
+            assert test_im, "Not able to read image properly!"
+        else:
+            test_im = dataset.get_random_test_image(crop_len=500)
         input_image = downscale_image(test_im, ratio=2)
         upscaled_image = upscale_image(input_image, ratio = 2)
         input_image = np_to_tensor(input_image, device)
         output = net(input_image)
         output = tensor_to_np(output)
-        cv2.imwrite("1output.png", output)
-        cv2.imwrite("2target.png", test_im)
-        cv2.imwrite("0upscaled.png", upscaled_image)
-    else: #Plotting loss values for models in a given folder
-        folder_name = args.folder_name
-        losses = []
-        for name in os.listdir(os.path.join(os.getcwd(), folder_name)):
-            checkpoint = torch.load(os.path.join(os.getcwd(), folder_name, name))
-            losses.append(checkpoint['loss'])
-        plt.plot(losses)
-        plt.grid()
-        plt.ylabel("MSE+PSNR")
-        plt.xlabel("epochs")
-        plt.title("Loss function")
-        plt.waitforbuttonpress()
+        cv2.imwrite("output.png", output)
+        cv2.imwrite("target.png", test_im)
+        cv2.imwrite("input.png", upscaled_image)
